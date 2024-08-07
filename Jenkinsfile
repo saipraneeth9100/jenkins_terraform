@@ -1,54 +1,44 @@
 pipeline {
-
-    parameters {
-        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
-    } 
+    agent any
+    
     environment {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
-
-   agent  any
-    stages {
-        stage('checkout') {
+ stages {
+        stage('Checkout') {
             steps {
-                 script{
-                        dir("terraform")
-                        {
-                            git 'https://github.com/Krishnakumarmorle/krishna_test1_trysol.git'
-                        }
-                    }
-                }
-            }
-
-        stage('Plan') {
-            steps {
-                sh 'pwd;cd terraform/ ; terraform init'
-                sh "pwd;cd terraform/ ; terraform plan -out tfplan"
-                sh 'pwd;cd terraform/ ; terraform show -no-color tfplan > tfplan.txt'
+                // Checkout your Terraform code from the Git repository
+                git branch: 'main', url: 'https://https://github.com/Krishnakumarmorle/krishna_test1_trysol'
             }
         }
-        stage('Approval') {
-           when {
-               not {
-                   equals expected: true, actual: params.autoApprove
-               }
-           }
-
-           steps {
-               script {
-                    def plan = readFile 'terraform/tfplan.txt'
-                    input message: "Do you want to apply the plan?",
-                    parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
-               }
-           }
-       }
-
-        stage('Apply') {
+        
+        stage('Terraform Init') {
             steps {
-                sh "pwd;cd terraform/ ; terraform apply -input=false tfplan"
+                // Initialize Terraform
+                sh 'terraform init'
+            }
+        }
+        
+        stage('Terraform Plan') {
+            steps {
+                // Run Terraform plan to see what changes will be made
+                sh 'terraform plan -out=tfplan'
+            }
+        }
+        
+        stage('Terraform Apply') {
+            steps {
+                // Apply the Terraform plan to create the EC2 instance
+                sh 'terraform apply -auto-approve tfplan'
             }
         }
     }
-
-  }
+    
+    post {
+        always {
+            // Clean up workspace after the build
+            cleanWs()
+        }
+    }
+}
