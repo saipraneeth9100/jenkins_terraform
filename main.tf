@@ -1,8 +1,11 @@
 provider "aws" {
-    region = "us-east-1"  # Set your desired AWS region
+    region = "us-east-1"  
 }
 
-resource "aws_instance" "example" {
-    ami           = "ami-0c55b159cbfafe1f0"  # Specify an appropriate AMI ID
-    instance_type = "t2.micro"
+resource "aws_instance" "tfjenkins" {
+  ami           = "ami-05fa00d4c63e32376" # us-west-2
+  instance_type = "t2.micro"
+  tags = {
+      Name = "tftest"
+  }
 }
