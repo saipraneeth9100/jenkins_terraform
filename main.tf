@@ -2,8 +2,8 @@ provider "aws" {
     region = "us-east-1"  
 }
 
-resource "aws_instance" "tfjenkins" {
-  ami           = "ami-05fa00d4c63e32376" # us-west-2
+resource "aws_instance" "tfjenkinstest" {
+  ami           = "ami-04a81a99f5ec58529"
   instance_type = "t2.micro"
   tags = {
       Name = "tftest"
