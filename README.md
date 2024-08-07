@@ -1,2 +1,2 @@
 # krishna_test1_trysol
-test repo
+creating aws instance with terraform code via jenkins pipeline
