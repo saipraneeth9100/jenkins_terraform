@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout your Terraform code from the Git repository
-                git branch: 'main', url: 'https://github.com/saipraneeth9100/terraform-aws-ec2-instance.git'
+                git branch: 'main', url: 'https://github.com/saipraneeth9100/jenkins_terraform.git'
             }
         }
         
